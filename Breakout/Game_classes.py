@@ -17,7 +17,8 @@ BRICK_HEIGHT = 20
 
 class Ball:
     def __init__(self):
-        self.pos = [random.randint(BALL_RADIUS, SCREEN_WIDTH - BALL_RADIUS), SCREEN_HEIGHT // 2]
+        self.radius = BALL_RADIUS
+        self.pos = [random.randint(self.radius, SCREEN_WIDTH - self.radius), SCREEN_HEIGHT // 2]
         self.vel = [random.randint(2, 4), random.randint(2, 4)]
 
     def update(self):
@@ -32,7 +33,9 @@ class Ball:
 
 class Paddle:
     def __init__(self):
-        self.pos = [(SCREEN_WIDTH - PADDLE_WIDTH) // 2, SCREEN_HEIGHT - PADDLE_HEIGHT * 2]
+        self.width = PADDLE_WIDTH
+        self.height = PADDLE_HEIGHT
+        self.pos = [(SCREEN_WIDTH - self.width) // 2, SCREEN_HEIGHT - self.height * 2]
         self.vel = 0
 
     def move_left(self):
@@ -48,8 +51,8 @@ class Paddle:
         self.pos[0] += self.vel
         if self.pos[0] < 0:
             self.pos[0] = 0
-        elif self.pos[0] > SCREEN_WIDTH - PADDLE_WIDTH:
-            self.pos[0] = SCREEN_WIDTH - PADDLE_WIDTH
+        elif self.pos[0] > SCREEN_WIDTH - self.width:
+            self.pos[0] = SCREEN_WIDTH - self.width
 
 class Brick:
     def __init__(self, x, y):
@@ -96,13 +99,13 @@ class BreakoutGame:
         self.ball.update()
 
         # Check for collision with walls
-        if self.ball.pos[0] < BALL_RADIUS or self.ball.pos[0] > SCREEN_WIDTH - BALL_RADIUS:
+        if self.ball.pos[0] < self.ball.radius or self.ball.pos[0] > SCREEN_WIDTH - self.ball.radius:
             self.ball.reverse_velocity_x()
-        if self.ball.pos[1] < BALL_RADIUS:
+        if self.ball.pos[1] < self.ball.radius:
             self.ball.reverse_velocity_y()
 
         # Check for collision with paddle
-        if self.ball.pos[1] > SCREEN_HEIGHT - BALL_RADIUS - PADDLE_HEIGHT and self.paddle.pos[0] <= self.ball.pos[0] <= self.paddle.pos[0] + PADDLE_WIDTH:
+        if self.ball.pos[1] > SCREEN_HEIGHT - self.ball.radius - self.paddle.height and self.paddle.pos[0] <= self.ball.pos[0] <= self.paddle.pos[0] + self.paddle.width:
             self.ball.reverse_velocity_y()
 
         # Check for collision with bricks
@@ -120,10 +123,10 @@ class BreakoutGame:
             pygame.draw.rect(self.screen, WHITE, brick.rect)
 
         # Draw paddle
-        pygame.draw.rect(self.screen, WHITE, (self.paddle.pos[0], self.paddle.pos[1], PADDLE_WIDTH, PADDLE_HEIGHT))
+        pygame.draw.rect(self.screen, WHITE, (self.paddle.pos[0], self.paddle.pos[1], self.paddle.width, self.paddle.height))
 
         # Draw ball
-        pygame.draw.circle(self.screen, WHITE, (self.ball.pos[0], self.ball.pos[1]), BALL_RADIUS)
+        pygame.draw.circle(self.screen, WHITE, (self.ball.pos[0], self.ball.pos[1]), self.ball.radius)
 
         pygame.display.flip()
 
@@ -135,3 +138,7 @@ class BreakoutGame:
             self.clock.tick(60)
 
         pygame.quit()
+
+# Run the game
+game = BreakoutGame()
+game.run()
