@@ -7,11 +7,12 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Define game constants
-SCREEN_WIDTH = 640
-SCREEN_HEIGHT = 480
-BALL_RADIUS = 10
-PADDLE_WIDTH = 75
-PADDLE_HEIGHT = 15
+#multiplied by 20 for visuals
+SCREEN_WIDTH = 300
+SCREEN_HEIGHT = 200
+BALL_RADIUS = 20
+PADDLE_WIDTH = 100
+PADDLE_HEIGHT = 20
 BRICK_WIDTH = 60
 BRICK_HEIGHT = 20
 
@@ -72,10 +73,10 @@ class BreakoutGame:
         self.ball = Ball()
         self.paddle = Paddle()
         self.bricks = []
-        for row in range(5):
+        for row in range(2):
             for col in range(SCREEN_WIDTH // BRICK_WIDTH):
                 brick_x = col * BRICK_WIDTH
-                brick_y = 75 + row * BRICK_HEIGHT
+                brick_y = row * BRICK_HEIGHT
                 brick = Brick(brick_x, brick_y)
                 self.bricks.append(brick)
 

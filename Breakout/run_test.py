@@ -1,15 +1,16 @@
-from Breakout.Game_classes import Game, Ball, Brick, Paddle
+from Game_classes import Ball, Paddle, Brick, BreakoutGame
 import pygame
 from pygame.locals import *
+
 
 # Initialize Pygame
 pygame.init()
 
 # Create game objects
-ball = Ball()
-paddle = Paddle()
-bricks = [Brick(100, 100), Brick(200, 100), Brick(300, 100)]
-game = Game()
+ball = Ball(BALL_RADIUS)
+paddle = Paddle(PADDLE_WIDTH, PADDLE_HEIGHT)
+bricks = [Brick(2, 2), Brick(8, 2), Brick(14, 2)]
+game = BreakoutGame(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 # Game loop
 while not game.game_over:
@@ -31,12 +32,12 @@ while not game.game_over:
     ball.update()
 
     # Check for collisions
-    if ball.pos[0] < Ball.RADIUS or ball.pos[0] > game.SCREEN_WIDTH - Ball.RADIUS:
+    if ball.pos[0] < ball.radius or ball.pos[0] > game.SCREEN_WIDTH - ball.radius:
         ball.reverse_velocity_x()
-    if ball.pos[1] < Ball.RADIUS:
+    if ball.pos[1] < ball.radius:
         ball.reverse_velocity_y()
 
-    if ball.pos[1] > game.SCREEN_HEIGHT - Ball.RADIUS - Paddle.HEIGHT and paddle.pos[0] <= ball.pos[0] <= paddle.pos[0] + Paddle.WIDTH:
+    if ball.pos[1] > game.SCREEN_HEIGHT - ball.radius - paddle.height and paddle.pos[0] <= ball.pos[0] <= paddle.pos[0] + paddle.width:
         ball.reverse_velocity_y()
 
     for brick in bricks:
@@ -51,8 +52,8 @@ while not game.game_over:
     for brick in bricks:
         pygame.draw.rect(game.screen, game.WHITE, brick.rect)
 
-    pygame.draw.rect(game.screen, game.WHITE, (paddle.pos[0], paddle.pos[1], Paddle.WIDTH, Paddle.HEIGHT))
-    pygame.draw.circle(game.screen, game.WHITE, (ball.pos[0], ball.pos[1]), Ball.RADIUS)
+    pygame.draw.rect(game.screen, game.WHITE, (paddle.pos[0], paddle.pos[1], paddle.width, paddle.height))
+    pygame.draw.circle(game.screen, game.WHITE, (ball.pos[0], ball.pos[1]), ball.radius)
 
     pygame.display.flip()
     game.clock.tick(60)
