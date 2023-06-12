@@ -1,0 +1,137 @@
+import pygame
+from pygame.locals import *
+import random
+
+# Define colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# Define game constants
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 480
+BALL_RADIUS = 10
+PADDLE_WIDTH = 75
+PADDLE_HEIGHT = 15
+BRICK_WIDTH = 60
+BRICK_HEIGHT = 20
+
+class Ball:
+    def __init__(self):
+        self.pos = [random.randint(BALL_RADIUS, SCREEN_WIDTH - BALL_RADIUS), SCREEN_HEIGHT // 2]
+        self.vel = [random.randint(2, 4), random.randint(2, 4)]
+
+    def update(self):
+        self.pos[0] += self.vel[0]
+        self.pos[1] += self.vel[1]
+
+    def reverse_velocity_x(self):
+        self.vel[0] = -self.vel[0]
+
+    def reverse_velocity_y(self):
+        self.vel[1] = -self.vel[1]
+
+class Paddle:
+    def __init__(self):
+        self.pos = [(SCREEN_WIDTH - PADDLE_WIDTH) // 2, SCREEN_HEIGHT - PADDLE_HEIGHT * 2]
+        self.vel = 0
+
+    def move_left(self):
+        self.vel = -5
+
+    def move_right(self):
+        self.vel = 5
+
+    def stop(self):
+        self.vel = 0
+
+    def update(self):
+        self.pos[0] += self.vel
+        if self.pos[0] < 0:
+            self.pos[0] = 0
+        elif self.pos[0] > SCREEN_WIDTH - PADDLE_WIDTH:
+            self.pos[0] = SCREEN_WIDTH - PADDLE_WIDTH
+
+class Brick:
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT)
+
+class BreakoutGame:
+    def __init__(self):
+        pygame.init()
+
+        # Set up the display
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Breakout")
+
+        # Set up the game clock
+        self.clock = pygame.time.Clock()
+
+        self.ball = Ball()
+        self.paddle = Paddle()
+        self.bricks = []
+        for row in range(5):
+            for col in range(SCREEN_WIDTH // BRICK_WIDTH):
+                brick_x = col * BRICK_WIDTH
+                brick_y = 75 + row * BRICK_HEIGHT
+                brick = Brick(brick_x, brick_y)
+                self.bricks.append(brick)
+
+        self.game_over = False
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                self.game_over = True
+            elif event.type == KEYDOWN:
+                if event.key == K_LEFT:
+                    self.paddle.move_left()
+                elif event.key == K_RIGHT:
+                    self.paddle.move_right()
+            elif event.type == KEYUP:
+                if event.key == K_LEFT or event.key == K_RIGHT:
+                    self.paddle.stop()
+
+    def update(self):
+        self.paddle.update()
+        self.ball.update()
+
+        # Check for collision with walls
+        if self.ball.pos[0] < BALL_RADIUS or self.ball.pos[0] > SCREEN_WIDTH - BALL_RADIUS:
+            self.ball.reverse_velocity_x()
+        if self.ball.pos[1] < BALL_RADIUS:
+            self.ball.reverse_velocity_y()
+
+        # Check for collision with paddle
+        if self.ball.pos[1] > SCREEN_HEIGHT - BALL_RADIUS - PADDLE_HEIGHT and self.paddle.pos[0] <= self.ball.pos[0] <= self.paddle.pos[0] + PADDLE_WIDTH:
+            self.ball.reverse_velocity_y()
+
+        # Check for collision with bricks
+        for brick in self.bricks:
+            if brick.rect.collidepoint(self.ball.pos):
+                self.bricks.remove(brick)
+                self.ball.reverse_velocity_y()
+                break
+
+    def draw(self):
+        self.screen.fill(BLACK)
+
+        # Draw bricks
+        for brick in self.bricks:
+            pygame.draw.rect(self.screen, WHITE, brick.rect)
+
+        # Draw paddle
+        pygame.draw.rect(self.screen, WHITE, (self.paddle.pos[0], self.paddle.pos[1], PADDLE_WIDTH, PADDLE_HEIGHT))
+
+        # Draw ball
+        pygame.draw.circle(self.screen, WHITE, (self.ball.pos[0], self.ball.pos[1]), BALL_RADIUS)
+
+        pygame.display.flip()
+
+    def run(self):
+        while not self.game_over:
+            self.handle_events()
+            self.update()
+            self.draw()
+            self.clock.tick(60)
+
+        pygame.quit()
