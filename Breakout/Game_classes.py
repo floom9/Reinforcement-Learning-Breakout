@@ -55,6 +55,21 @@ class Paddle:
         elif self.pos[0] > SCREEN_WIDTH - self.width:
             self.pos[0] = SCREEN_WIDTH - self.width
 
+    def get_direction(self, ball_pos):
+        paddle_center = self.pos[0] + self.width / 2
+        hit_position = (ball_pos[0] - self.pos[0]) / self.width
+        #directions are not multiplied by 20
+        if hit_position < 0.2:
+            return -2, 1  # Move the ball to the left
+        elif hit_position < 0.4:
+            return -1, 1  # Move the ball slightly to the left
+        elif hit_position < 0.6:
+            return 0, 1  # Move the ball straight
+        elif hit_position < 0.8:
+            return 1, 1  # Move the ball slightly to the right
+        else:
+            return 2, 1  # Move the ball to the right
+
 class Brick:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT)
@@ -99,17 +114,18 @@ class BreakoutGame:
         self.paddle.update()
         self.ball.update()
 
-        # Check for collision with walls
+        # Check for collisions
         if self.ball.pos[0] < self.ball.radius or self.ball.pos[0] > SCREEN_WIDTH - self.ball.radius:
             self.ball.reverse_velocity_x()
         if self.ball.pos[1] < self.ball.radius:
             self.ball.reverse_velocity_y()
 
-        # Check for collision with paddle
         if self.ball.pos[1] > SCREEN_HEIGHT - self.ball.radius - self.paddle.height and self.paddle.pos[0] <= self.ball.pos[0] <= self.paddle.pos[0] + self.paddle.width:
+            direction_x, direction_y = self.paddle.get_direction(self.ball.pos)
+            self.ball.vel[0] = direction_x
+            self.ball.vel[1] = direction_y
             self.ball.reverse_velocity_y()
 
-        # Check for collision with bricks
         for brick in self.bricks:
             if brick.rect.collidepoint(self.ball.pos):
                 self.bricks.remove(brick)
@@ -140,6 +156,4 @@ class BreakoutGame:
 
         pygame.quit()
 
-# Run the game
-game = BreakoutGame()
-game.run()
+
