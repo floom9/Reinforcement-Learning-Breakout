@@ -16,7 +16,6 @@ class Breakout:
         self.done = False
         return self._get_state()
 
-
     def _generate_bricks(self):
         bricks = []
         for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
@@ -25,11 +24,13 @@ class Breakout:
                     bricks.append([i + j, 0])  # Arrange the blocks of the brick horizontally
         return bricks
 
-
     def _get_state(self):
         return self.ball_position, self.ball_direction, self.paddle_position, self.bricks
 
     def step(self, action):
+        # Initialize reward
+        reward = 0
+
         # Update paddle speed
         self.paddle_speed = max(min(self.paddle_speed + action, 2), -2) # paddle speed should be in the range [-2, 2]
         self.paddle_position[0] += self.paddle_speed
@@ -45,21 +46,13 @@ class Breakout:
         if self.ball_position[0] <= 0 or self.ball_position[0] >= self.grid_size[0]-1:
             self.ball_direction[0] *= -1 # Ball gets reflected in x-axis
 
-
         # Check if ball hits brick
         for brick in self.bricks:
             if self.ball_position[0] == brick[0] and self.ball_position[1] == brick[1]:
                 self.bricks.remove(brick) # Brick disappears
                 self.ball_direction[1] *= -1 # Ball gets reflected
+                reward = 1 # reward for hitting a brick
                 break
-
-        # Check if all bricks are destroyed
-        if len(self.bricks) == 0:
-            self.done = True
-            reward = 100 # You can set any positive reward value here
-        else:
-            reward = -1
-
 
         # Check if ball hits paddle
         if self.paddle_position[0] <= self.ball_position[0] < (self.paddle_position[0] + self.paddle_size) and self.ball_position[1] == self.paddle_position[1]:
@@ -69,7 +62,12 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            self.reset()
             self.done = True # End of episode
+            reward = -10 # punishment for missing the ball
 
-        return self._get_state(),
+        # Check if all bricks are destroyed
+        if len(self.bricks) == 0:
+            self.done = True # End of episode
+            reward = 100 # reward for winning the game
+
+        return self._get_state(), reward, self.done
