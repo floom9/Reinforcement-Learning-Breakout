@@ -31,20 +31,32 @@ class Breakout:
         # Initialize reward
         reward = 0
 
-        # Update paddle speed
-        self.paddle_speed = max(min(self.paddle_speed + action, 2), -2) # paddle speed should be in the range [-2, 2]
+        action = np.clip(action, -1, 1)
+    
+        # Update paddle speed, ensure the speed is within the range of [-2, 2]
+        self.paddle_speed = np.clip(self.paddle_speed + action, -2, 2)
+        
+        # Update paddle position based on the speed
         self.paddle_position[0] += self.paddle_speed
 
         # Ensure the paddle stays within the grid
         self.paddle_position[0] = np.clip(self.paddle_position[0], 0, self.grid_size[0]-self.paddle_size)
 
-        # Update ball position
-        self.ball_position[0] += self.ball_direction[0]
-        self.ball_position[1] += self.ball_direction[1]
 
-        # Check if ball hits the boundaries
-        if self.ball_position[0] <= 0 or self.ball_position[0] >= self.grid_size[0]-1:
+        # Update ball position if within the boundaries
+        if 0 <= self.ball_position[0] + self.ball_direction[0] < self.grid_size[0]:
+            self.ball_position[0] += self.ball_direction[0]
+        else:
+            self.ball_position[0] += self.ball_direction[0]
             self.ball_direction[0] *= -1 # Ball gets reflected in x-axis
+
+        if 0 <= self.ball_position[1] + self.ball_direction[1] <= self.grid_size[1]:
+            self.ball_position[1] += self.ball_direction[1]
+        elif self.ball_position[1] + self.ball_direction[1] == 0: # Ball hits the upper boundary
+            self.ball_position[1] += self.ball_direction[1]
+            self.ball_direction[1] *= -1 # Ball gets reflected in y-axis
+
+
 
         # Check if ball hits brick
         for brick in self.bricks:
@@ -57,8 +69,14 @@ class Breakout:
         # Check if ball hits paddle
         if self.paddle_position[0] <= self.ball_position[0] < (self.paddle_position[0] + self.paddle_size) and self.ball_position[1] == self.paddle_position[1]:
             self.ball_direction[1] *= -1
+
+            # Determine the part of the paddle the ball hit
+            paddle_part = (self.ball_position[0] - self.paddle_position[0]) // (self.paddle_size // 5)
+            paddle_parts = [-2, -1, 0, 1, 2]
+            
             # Change horizontal direction based on where the ball hits the paddle
-            self.ball_direction[0] = self.ball_position[0] - self.paddle_position[0] - self.paddle_size // 2
+            self.ball_direction[0] = paddle_parts[paddle_part]
+
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
