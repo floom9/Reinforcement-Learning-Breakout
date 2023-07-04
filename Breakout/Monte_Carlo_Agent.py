@@ -1,35 +1,46 @@
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.optimizers import Adam
+from collections import deque
 import numpy as np
+import random
 
 class MonteCarloAgent:
-    def __init__(self, num_actions, num_states, discount_factor=1.0, epsilon=0.1):
-        self.num_actions = num_actions
-        self.num_states = num_states
-        self.epsilon = epsilon
-        self.discount_factor = discount_factor
+    def __init__(self, state_size, action_size):
+        self.state_size = state_size
+        self.action_size = action_size
+        self.memory = deque(maxlen=2000)
+        self.gamma = 0.95  # discount factor
+        self.epsilon = 1.0  # exploration rate
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.995
+        self.model = self._build_model()
 
-        # Initialize Q-table with zeros
-        self.Q = np.zeros((num_states, num_actions))
-        self.returns_sum = np.zeros((num_states, num_actions))
-        self.returns_count = np.zeros((num_states, num_actions))
+    def _build_model(self):
+        # Neural Net for Deep-Q learning Model
+        model = Sequential()
+        model.add(Dense(24, input_dim=self.state_size, activation='relu'))
+        model.add(Dense(24, activation='relu'))
+        model.add(Dense(self.action_size, activation='linear'))
+        model.compile(loss='mse', optimizer=Adam())
+        return model
 
-    def choose_action(self, state):
-        # Implement epsilon-greedy policy
-        if np.random.rand() < self.epsilon:
-            return np.random.choice(self.num_actions)  # exploration
-        else:
-            return np.argmax(self.Q[state])  # exploitation
+    def remember(self, state, action, reward, next_state, done):
+        self.memory.append((state, action, reward, next_state, done))
 
-    def learn(self, episode):
-        """ Update the action-value function using the episode's returns """
-        states, actions, rewards = zip(*episode)
+    def act(self, state):
+        if np.random.rand() <= self.epsilon:
+            return random.randrange(self.action_size)
+        act_values = self.model.predict(state)
+        return np.argmax(act_values[0])
 
-        # Compute the discounts
-        discounts = np.array([self.discount_factor**i for i in range(len(rewards)+1)])
-
-        # Update the Q-table
-        for i, state in enumerate(states):
-            # Calculate the return
-            G = sum(rewards[i:]*discounts[:-(i+1)])
-            self.returns_sum[state][actions[i]] += G
-            self.returns_count[state][actions[i]] += 1.0
-            self.Q[state][actions[i]] = self.returns_sum[state][actions[i]] / self.returns_count[state][actions[i]]
+    def replay(self):
+        for state, action, reward, next_state, done in reversed(self.memory):
+            target = reward
+            if not done:
+                target = (reward + self.gamma * np.amax(self.model.predict(next_state)[0]))
+            target_f = self.model.predict(state)
+            target_f[0][action] = target
+            self.model.fit(state, target_f, epochs=1, verbose=0)
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay

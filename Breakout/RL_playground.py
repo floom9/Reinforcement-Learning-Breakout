@@ -1,57 +1,41 @@
-import itertools
-import matplotlib.pyplot as plt
 import numpy as np
 from Breakout_Class_Test import Breakout
 from Monte_Carlo_Agent import MonteCarloAgent
 
-# Initialize the game environment and agent
-grid_size = (15, 10)
-num_bricks = 5
-num_episodes = 1000
+# Initialize the environment and the agent
+env = Breakout()
+state_size = len(env._get_state())  # You might want to adjust this depending on how you represent states
+action_size = 5  # Let's assume you have 5 possible actions
+agent = MonteCarloAgent(state_size, action_size)
 
-env = Breakout(grid_size=grid_size, num_bricks=num_bricks)
-agent = MonteCarloAgent(num_actions=3, num_states=np.prod(grid_size), epsilon=0.1)
+# Set number of episodes to run the simulation
+episodes = 1000
 
-# Monitor the total reward per episode
-rewards = []
-
-# Main loop
-for episode_num in range(num_episodes):
+for e in range(episodes):
+    # Reset state at the beginning of each game
     state = env.reset()
-    episode = []
-    total_reward = 0
+    state = np.reshape(state, [1, state_size])
 
-    # Generate an episode
-    for t in itertools.count():
-        # Choose an action based on the current state
-        action = agent.choose_action(state)
-
-        # Perform the action and get the new state and reward
-        next_state, reward, done = env.step(action)
-
-        # Store the transition in the episode
-        episode.append((state, action, reward))
+    done = False
+    while not done:
+        # Agent takes action
+        action = agent.act(state)
         
-        # Update the total reward
-        total_reward += reward
-
-        # Update the current state
+        # Retrieve the next state, reward, and whether the episode is done
+        next_state, reward, done = env.step(action)
+        next_state = np.reshape(next_state, [1, state_size])
+        
+        # Remember the previous state, action, reward, and done
+        agent.remember(state, action, reward, next_state, done)
+        
+        # Make next_state the new current state for the next frame.
         state = next_state
-
+        
+        # done becomes True when the game ends
         if done:
-            break
+            # Print result every episode
+            print("episode: {}/{}, score: {}"
+                  .format(e, episodes, reward))
 
-    # Learn from the episode
-    agent.learn(episode)
-
-    # Store the total reward
-    rewards.append(total_reward)
-
-    if episode_num % 100 == 0:
-        print(f'Episode {episode_num}/{num_episodes}. Total reward: {total_reward}')
-
-# Plot the total reward per episode
-plt.plot(rewards)
-plt.xlabel('Episode')
-plt.ylabel('Total Reward')
-plt.show()
+            # Replay and learn from the past experiences
+            agent.replay()
