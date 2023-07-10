@@ -1,4 +1,4 @@
-from Breakout_Class_Test import Breakout
+from Breakout.Breakout_Class import Breakout
 import numpy as np
 
 #seems to work
@@ -11,7 +11,7 @@ for _ in range(100):
     print(reward, done) 
 '''
 
-num_games = 10
+num_games = 1
 game = Breakout()
 
 for i in range(num_games):
@@ -22,5 +22,5 @@ for i in range(num_games):
         choices = np.array([-1, 0, 1])
         action = np.random.choice(choices)
         state, reward, done = game.step(action)
-        print(state[0])
+        print(state)
         

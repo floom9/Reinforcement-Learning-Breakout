@@ -19,9 +19,11 @@ class Breakout:
     def _generate_bricks(self):
         bricks = []
         for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
+            brick = []
             for j in range(3):  # For each block of the brick
                 if i + j < self.grid_size[0]:  # To prevent bricks going out of the grid
-                    bricks.append([i + j, 0])  # Arrange the blocks of the brick horizontally
+                    brick.append([i + j, 0])  # Arrange the blocks of the brick horizontally
+            bricks.append(brick)
         return bricks
 
     def _get_state(self):
@@ -44,7 +46,7 @@ class Breakout:
 
 
         # Update ball position if within the boundaries
-        if 0 <= self.ball_position[0] + self.ball_direction[0] < self.grid_size[0]:
+        if 0 <= self.ball_position[0] + self.ball_direction[0] <= self.grid_size[0]:
             self.ball_position[0] += self.ball_direction[0]
         else:
             self.ball_position[0] += self.ball_direction[0]
@@ -60,7 +62,7 @@ class Breakout:
 
         # Check if ball hits brick
         for brick in self.bricks:
-            if self.ball_position[0] == brick[0] and self.ball_position[1] == brick[1]:
+            if self.ball_position in brick:
                 self.bricks.remove(brick) # Brick disappears
                 self.ball_direction[1] *= -1 # Ball gets reflected
                 reward = 1 # reward for hitting a brick
