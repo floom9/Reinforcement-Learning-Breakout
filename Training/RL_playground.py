@@ -1,14 +1,14 @@
 import numpy as np
 from Breakout_Class_Test import Breakout
-from Monte_Carlo_Agent import MonteCarloAgent
+from Agents.Q_Deep_Agent import MonteCarloAgent
 
 # Initialize the environment and the agent
 env = Breakout()
 state_size = len(env._get_state())  # You might want to adjust this depending on how you represent states
-action_size = 5  # Let's assume you have 5 possible actions
+action_size = 3  # 3 possible actions
 agent = MonteCarloAgent(state_size, action_size)
 
-# Set number of episodes to run the simulation
+# Number of episodes to run the simulation
 episodes = 1000
 
 for e in range(episodes):
