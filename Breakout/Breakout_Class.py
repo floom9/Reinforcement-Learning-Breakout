@@ -39,7 +39,7 @@ class Breakout:
         return bricks
 
     def _get_state(self):
-        return [self.ball_position, self.ball_direction, self.paddle_position, self.bricks]
+        return [self.ball_position, self.ball_direction, self.paddle_position, self.paddle_speed, self.bricks]
 
     def step(self, action):
         # Initialize reward
