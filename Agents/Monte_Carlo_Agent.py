@@ -15,6 +15,7 @@ class MonteCarloAgent:
             self.N[sa] += 1
             self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
             total_reward *= self.gamma
+            print(self.N)
 
 
     def act(self, state, train=True):

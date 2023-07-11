@@ -7,5 +7,5 @@ env = Breakout()
 agent = MonteCarloAgent()
 
 # Let's train the agent for 1000 episodes
-rewards = train_agent(agent, env, 100)
+rewards = train_agent(agent, env, 10000)
 

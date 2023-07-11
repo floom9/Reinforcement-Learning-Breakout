@@ -1,7 +1,7 @@
 import numpy as np
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=500):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5
@@ -77,7 +77,7 @@ class Breakout:
             if self.ball_position in brick:
                 self.bricks.remove(brick) # Brick disappears
                 self.ball_direction[1] *= -1 # Ball gets reflected
-                reward += 1 # reward for hitting a brick
+                #reward += 1 # reward for hitting a brick
                 break
 
         # Check if ball hits paddle
@@ -94,12 +94,12 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            reward += -10 # punishment for missing the ball
+            #reward += -10 # punishment for missing the ball
             self.ingame_reset()
         # Check if all bricks are destroyed
         if len(self.bricks) == 0:
             self.done = True # End of episode
-            reward += 100 # reward for winning the game
+            #reward += 100 # reward for winning the game
 
         # count timesteps in this run
         self.timesteps +=1
