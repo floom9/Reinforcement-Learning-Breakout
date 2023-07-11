@@ -16,7 +16,6 @@ def train_agent(agent, env, episodes, render=False):
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
-
             # Record the transition
             transitions.append((state, action, reward))
 
@@ -35,7 +34,7 @@ def train_agent(agent, env, episodes, render=False):
         if render:
             env.render()
 
-        if episode % 1 == 0:
+        if episode % 100 == 0:
             print(f'Episode {episode}/{episodes}: Reward {total_reward}')
 
     return rewards

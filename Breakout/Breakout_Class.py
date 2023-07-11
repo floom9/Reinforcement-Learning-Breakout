@@ -1,13 +1,25 @@
 import numpy as np
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=500):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5
+        self.max_timesteps=max_timesteps
+        self.timesteps= 0
         self.reset()
 
     def reset(self):
+        self.paddle_position = [self.grid_size[0] // 2, self.grid_size[1] - 1] # place paddle in the center
+        self.ball_position = [self.paddle_position[0] + self.paddle_size // 2, self.paddle_position[1] - 1] # place ball on top of the paddle
+        self.ball_direction = [np.random.choice([-2, -1, 0, 1, 2]), -1] # initial direction of the ball
+        self.paddle_speed = 0
+        self.bricks = self._generate_bricks() 
+        self.done = False
+        self.timesteps=0
+        return self._get_state()
+
+    def ingame_reset(self):
         self.paddle_position = [self.grid_size[0] // 2, self.grid_size[1] - 1] # place paddle in the center
         self.ball_position = [self.paddle_position[0] + self.paddle_size // 2, self.paddle_position[1] - 1] # place ball on top of the paddle
         self.ball_direction = [np.random.choice([-2, -1, 0, 1, 2]), -1] # initial direction of the ball
@@ -27,11 +39,11 @@ class Breakout:
         return bricks
 
     def _get_state(self):
-        return self.ball_position, self.ball_direction, self.paddle_position, self.bricks
+        return [self.ball_position, self.ball_direction, self.paddle_position, self.bricks]
 
     def step(self, action):
         # Initialize reward
-        reward = 0
+        reward = -1
 
         action = np.clip(action, -1, 1)
     
@@ -65,7 +77,7 @@ class Breakout:
             if self.ball_position in brick:
                 self.bricks.remove(brick) # Brick disappears
                 self.ball_direction[1] *= -1 # Ball gets reflected
-                reward = 1 # reward for hitting a brick
+                reward += 1 # reward for hitting a brick
                 break
 
         # Check if ball hits paddle
@@ -82,12 +94,17 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            self.done = True # End of episode
-            reward = -10 # punishment for missing the ball
-
+            reward += -10 # punishment for missing the ball
+            self.ingame_reset()
         # Check if all bricks are destroyed
         if len(self.bricks) == 0:
             self.done = True # End of episode
-            reward = 100 # reward for winning the game
+            reward += 100 # reward for winning the game
+
+        # count timesteps in this run
+        self.timesteps +=1
+        if self.timesteps >= self.max_timesteps: 
+            self.done=True
+
 
         return self._get_state(), reward, self.done

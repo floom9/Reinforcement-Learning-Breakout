@@ -22,5 +22,5 @@ for i in range(num_games):
         choices = np.array([-1, 0, 1])
         action = np.random.choice(choices)
         state, reward, done = game.step(action)
-        print(state[0],state[2])
+        print(state)
         
