@@ -13,7 +13,7 @@ class MonteCarloAgent:
     def update_Q(self, episode, total_reward):
         for s, a, r in reversed(episode):
             # print(s, a, r)
-            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]),tuple(s[3]), tuple(tuple(tuple(x) for brick in s[4]) for x in brick), a)
+            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]),tuple(s[3]), tuple(tuple(tuple(brick) for brick in bricks) for bricks in s[4]), a)
             self.N[sa] += 1
             self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
             total_reward *= self.gamma
