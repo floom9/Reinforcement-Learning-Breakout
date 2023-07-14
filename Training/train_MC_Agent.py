@@ -1,4 +1,5 @@
 import time 
+from Breakout.renderer import renderer
 
 def train_agent(agent, env, episodes, render=True):
     rewards = []
@@ -11,6 +12,9 @@ def train_agent(agent, env, episodes, render=True):
         # Record the transitions
         transitions = []
         total_reward = 0
+
+        # Display new episode
+        # renderer.display_episode(renderer, episode)
 
         while not done:
             # Choose action based on the agent's policy

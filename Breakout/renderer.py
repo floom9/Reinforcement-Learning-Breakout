@@ -8,7 +8,7 @@ WHITE = (255, 255, 255)
 # Subtracting 2 for visual separation 
 
 CELL_SIZE = 20
-BALL_RADIUS = CELL_SIZE - 2
+BALL_RADIUS = CELL_SIZE - 10
 PADDLE_WIDTH = 100
 PADDLE_HEIGHT = 20
 BRICK_WIDTH = (CELL_SIZE * 3) - 2  
@@ -19,7 +19,10 @@ class renderer:
     def __init__(self, env):
         self.env = env
         pygame.init()
-        self.screen = pygame.display.set_mode((env.grid_size[0] * CELL_SIZE, env.grid_size[1] * CELL_SIZE))
+        self.grid_width = env.grid_size[0] * CELL_SIZE
+        self.grid_heigth = env.grid_size[1] * CELL_SIZE
+        self.screen = pygame.display.set_mode((self.grid_width, self.grid_heigth))
+
         pygame.display.set_caption("Breakout")
 
     def draw(self, ball_position, paddle_position, bricks):
@@ -45,3 +48,9 @@ class renderer:
         paddle_position = state[2]
         bricks = state[4]
         self.draw(ball_position, paddle_position, bricks)
+
+    def display_episode(self, episode):
+        font = pygame.font.SysFont('arial', 50)
+        text = font.render(str(episode), True, WHITE)
+        self.screen.blit(text, (10, self.grid_heigth - 60))
+        pygame.display.update()
