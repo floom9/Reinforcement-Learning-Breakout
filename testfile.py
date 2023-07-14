@@ -1,10 +1,10 @@
 import numpy as np
 from collections import defaultdict
-
-a= 1
-mytup= (a,a)
+import random
 
 
 
-print(tuple(mytup))
-print(tuple(a))
+a= (1,2)
+
+a[1]=np.clip(a ,10,11)
+print(a)
