@@ -12,7 +12,8 @@ class MonteCarloAgent:
 
     def update_Q(self, episode, total_reward):
         for s, a, r in reversed(episode):
-            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]),s[3], tuple(tuple(x) for brick in s[4] for x in brick), a)
+            # print(s, a, r)
+            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]),tuple(s[3]), tuple(tuple(tuple(x) for brick in s[4]) for x in brick), a)
             self.N[sa] += 1
             self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
             total_reward *= self.gamma
@@ -26,6 +27,7 @@ class MonteCarloAgent:
             # make sure that a random action is taken that has the max value
             # randomly (argmax alone takes allways the first option)
             q_values = [self.Q[(state_tuple, action)] for action in self.action_space]
+            print(self.action_space[np.argmax[q_values]])
             return self.action_space[np.argmax(q_values)]
 
     def update_epsilon(self, t):

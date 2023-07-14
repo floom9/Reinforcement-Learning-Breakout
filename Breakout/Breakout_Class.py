@@ -1,4 +1,5 @@
 import numpy as np
+from Breakout.renderer import renderer
 
 class Breakout:
     def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000):
@@ -7,6 +8,7 @@ class Breakout:
         self.paddle_size = 5
         self.max_timesteps=max_timesteps
         self.timesteps= 0
+        self.renderer = renderer(self)
         self.reset()
 
     def reset(self):
@@ -71,7 +73,6 @@ class Breakout:
             self.ball_direction[1] *= -1 # Ball gets reflected in y-axis
 
 
-
         # Check if ball hits brick
         for brick in self.bricks:
             if self.ball_position in brick:
@@ -108,3 +109,7 @@ class Breakout:
 
 
         return self._get_state(), reward, self.done
+
+    def render(self, render=True): 
+        if render:
+            self.renderer.render()
