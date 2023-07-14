@@ -10,7 +10,7 @@ conda activate breakout
 pip install -r requirements.txt
 ```
 
-Ran into some issues using pygame for rendering. Installing it from the conda-forge repository works: 
+Ran into some issues installing pygame via conda. Installing it from the conda-forge repository works: 
 
 ```bash
 conda install -c conda-forge pygame

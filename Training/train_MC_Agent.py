@@ -1,5 +1,7 @@
-import numpy as np
-def train_agent(agent, env, episodes, render=False):
+import time 
+from Breakout.renderer import renderer
+
+def train_agent(agent, env, episodes, render=True):
     rewards = []
 
     for episode in range(episodes):
@@ -28,6 +30,9 @@ def train_agent(agent, env, episodes, render=False):
         while not done:
             # Choose action based on the agent's policy
             action = agent.act(state)
+            if render: 
+                env.render()
+            time.sleep(0.02)
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
@@ -48,9 +53,10 @@ def train_agent(agent, env, episodes, render=False):
 
         # Reduce the epsilon (Exploration vs. Exploitation trade-off)
         agent.update_epsilon(episode)
-        render=False
-        if render:
-            env.render()
+
+        # only rendering end step - useful?
+        # if render:
+        #   env.render()
 
         if (episode+1) % 100 == 0:
             print(f'Episode {episode+1}/{episodes}: Reward {total_reward}')
