@@ -1,5 +1,6 @@
 from Breakout.Breakout_Class import Breakout
 import numpy as np
+import time
 
 #seems to work
 '''
@@ -23,4 +24,6 @@ for i in range(num_games):
         action = np.random.choice(choices)
         state, reward, done = game.step(action)
         game.render()
+        time.sleep(1)
+
         
