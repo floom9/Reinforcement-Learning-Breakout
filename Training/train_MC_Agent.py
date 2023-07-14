@@ -1,4 +1,4 @@
-def train_agent(agent, env, episodes, render=False):
+def train_agent(agent, env, episodes, render=True):
     rewards = []
 
     for episode in range(episodes):
@@ -13,6 +13,8 @@ def train_agent(agent, env, episodes, render=False):
         while not done:
             # Choose action based on the agent's policy
             action = agent.act(state)
+            if render: 
+                env.render()
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
@@ -31,8 +33,9 @@ def train_agent(agent, env, episodes, render=False):
         # Reduce the epsilon (Exploration vs. Exploitation trade-off)
         agent.update_epsilon(episode)
 
-        if render:
-            env.render()
+        # only rendering end step - useful?
+        # if render:
+        #   env.render()
 
         if episode % 100 == 0:
             print(f'Episode {episode}/{episodes}: Reward {total_reward}')

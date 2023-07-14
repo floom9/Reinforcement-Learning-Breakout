@@ -13,21 +13,21 @@ class MonteCarloAgent:
     def update_Q(self, episode, total_reward):
         for s, a, r in reversed(episode):
             # print(s, a, r) s[0]= ballposition (a,b), s[1] =ball direction tuple, s[2] is paddle postion tuple, s[3] is paddle speed, s[4] is bricks in iteratable
-            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]),s[3], tuple(tuple(tuple(brick) for brick in bricks) for bricks in s[4]), a)
+            sa = (tuple(s[0]), tuple(s[1]), tuple(s[2]), s[3], tuple(tuple(tuple(brick) for brick in bricks) for bricks in s[4]), a)
             self.N[sa] += 1
             self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
             total_reward *= self.gamma
 
 
     def act(self, state, train=True):
-        state_tuple = (tuple(state[0]), tuple(state[1]), tuple(state[2]), state[3],tuple(tuple(tuple(brick) for brick in bricks) for bricks in state[4]))
+        state_tuple = (tuple(state[0]), tuple(state[1]), tuple(state[2]), state[3], tuple(tuple(tuple(brick) for brick in bricks) for bricks in state[4]))
         if train and np.random.rand() <= self.epsilon:
             return np.random.choice(self.action_space)
         else:
             # make sure that a random action is taken that has the max value
             # randomly (argmax alone takes allways the first option)
             q_values = [self.Q[(state_tuple, action)] for action in self.action_space]
-            print(self.action_space[np.argmax(q_values)])
+            # print(self.action_space[np.argmax(q_values)])
             return self.action_space[np.argmax(q_values)]
 
     def update_epsilon(self, t):

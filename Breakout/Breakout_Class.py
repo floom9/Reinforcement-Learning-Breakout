@@ -110,6 +110,5 @@ class Breakout:
 
         return self._get_state(), reward, self.done
 
-    def render(self, render=True): 
-        if render:
-            self.renderer.render()
+    def render(self): 
+        self.renderer.render()
