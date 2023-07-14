@@ -1,3 +1,5 @@
+import time 
+
 def train_agent(agent, env, episodes, render=True):
     rewards = []
 
@@ -15,6 +17,7 @@ def train_agent(agent, env, episodes, render=True):
             action = agent.act(state)
             if render: 
                 env.render()
+            time.sleep(0.02)
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
