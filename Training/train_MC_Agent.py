@@ -1,7 +1,8 @@
 import time 
-from Breakout.renderer import renderer
+import numpy as np
+#from Breakout.renderer import renderer
 
-def train_agent(agent, env, episodes, render=True):
+def train_agent(agent, env, episodes, render=False):
     rewards = []
 
     for episode in range(episodes):
@@ -32,7 +33,7 @@ def train_agent(agent, env, episodes, render=True):
             action = agent.act(state)
             if render: 
                 env.render()
-            time.sleep(0.02)
+                time.sleep(0.02)
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
