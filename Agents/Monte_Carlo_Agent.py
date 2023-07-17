@@ -49,18 +49,22 @@ class MonteCarloAgentES:
         state_action_tuple=()
         q_values=[]
         # make sure that a random action is taken that has the max value
-        # randomly (argmax alone takes allways the first option)
+        
         for action in self.action_space:
             state_action_tuple =(tuple(state[0]), tuple(state[1]), tuple(state[2]), state[3],tuple(tuple(tuple(brick) for brick in bricks) for bricks in state[4]), action)
             q_values.append(self.Q[state_action_tuple])
-        #print(self.action_space[np.argmax(q_values)])
 
+        # randomly (argmax alone takes allways the first option)
+        max_q_value = np.max(q_values)
+        max_q_indices = [i for i, q_value in enumerate(q_values) if q_value == max_q_value]
 
+        return self.action_space[np.random.choice(max_q_indices)]
 
-        return self.action_space[np.argmax(q_values)]
+        #return self.action_space[np.argmax(q_values)]
 
     def update_epsilon(self, t):
         self.epsilon = max(1.0 / (1.0 + t), 0.05)
+
 
 # function return function (as needed by defaultdict)
 # to create array with rand values that  sum to 1
