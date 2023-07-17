@@ -11,13 +11,13 @@ class Breakout:
         self.max_timesteps=max_timesteps
         self.timesteps= 0
         self.rendering = rendering
-        if self.render: 
+        if rendering: 
             self.renderer = renderer(self)
 
         self.reset()
 
     def reset(self):
-        self.paddle_position = [self.grid_size[0] // 2, self.grid_size[1] - 1]# place paddle in the center
+        self.paddle_position = [self.grid_size[0] // 2, self.grid_size[1] - 1] # place paddle in the center
         self.ball_position = [self.paddle_position[0] + self.paddle_size // 2, self.paddle_position[1] - 1] # place ball on top of the paddle
         self.ball_direction = [np.random.choice([-2, -1, 0, 1, 2]), -1] # initial direction of the ball
         self.paddle_speed = 0
@@ -33,10 +33,10 @@ class Breakout:
         self.ball_direction = [np.random.choice([-2, -1, 0, 1, 2]), np.random.choice([-1,1])] # initial direction of the ball
         self.paddle_speed = np.random.choice([-2,-1,0,1,2])
 
-        # using this method a high and low number of bricks is equally likly 
+        # using this method a high and low number of bricks is equally likely 
         # higher chance of few brick leads than if we give 50/50 chance for each brick to exist 
         self.bricks = self._generate_bricks() 
-        numOfBricks= random.randrange(len(self.bricks)) +1
+        numOfBricks= random.randrange(len(self.bricks)) + 1
 
 
         while len(self.bricks) > numOfBricks:
@@ -70,13 +70,13 @@ class Breakout:
                 brick = []
                 for j in range(3):  # For each block of the brick
                     if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
-                            brick.append([i + j, k])  # Arrange the blocks of the brick horizontally
+                            brick.append([i + j, k])  # Arrange the blocks of the brick horizontally in row k 
                 if len(bricks) < self.num_bricks:
                     bricks.append(brick)
         return bricks
 
     def _get_state(self):
-        stateTuple= (tuple(self.ball_position), tuple(self.ball_direction), tuple(self.paddle_position), self.paddle_speed,tuple(tuple(tuple(brick) for brick in bricks) for bricks in self.bricks))
+        stateTuple = (tuple(self.ball_position), tuple(self.ball_direction), tuple(self.paddle_position), self.paddle_speed, tuple(tuple(tuple(brick) for brick in bricks) for bricks in self.bricks))
         return stateTuple
 
     def step(self, action):
@@ -114,13 +114,13 @@ class Breakout:
 
 
         # Check if ball hits brick
-        hit= False
+        hit = False
         for brick in self.bricks:
             if self.ball_position in brick:
                 self.bricks.remove(brick)
                 self.ball_direction[1] *= -1 # Ball gets reflected
-                #reward += 1 # reward for hitting a brick
-                hit=True
+                reward += 50 # reward for hitting a brick
+                hit = True
 
         # Check if ball hits paddle
         if self.paddle_position[0] <= self.ball_position[0] < (self.paddle_position[0] + self.paddle_size) and self.ball_position[1] == self.paddle_position[1]:
@@ -136,16 +136,16 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            #reward += -10 # punishment for missing the ball
+            reward += -10 # punishment for missing the ball
             self.ingame_reset()
         # Check if all bricks are destroyed
         if len(self.bricks) == 0:
             reward= 0
             self.done = True # End of episode
-            #reward += 100 # reward for winning the game
+            reward += 1000 # reward for winning the game
 
         # count timesteps in this run
-        self.timesteps +=1
+        self.timesteps += 1
         if self.timesteps >= self.max_timesteps: 
             self.done=True
 

@@ -13,7 +13,7 @@ for _ in range(100):
 '''
 
 num_games = 1
-game = Breakout()
+game = Breakout(rendering=True)
 
 for i in range(num_games):
     game.reset()

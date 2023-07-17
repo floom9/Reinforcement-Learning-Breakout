@@ -1,7 +1,10 @@
 import numpy as np
+import visualizer as visualizer
 
 def train_agent(agent, env, episodes):
     rewards = []
+    timestep = 0
+    rewards_per_timestep = []
 
     for episode in range(episodes):
         # Reset environment and get initial state
@@ -35,11 +38,14 @@ def train_agent(agent, env, episodes):
             next_state, reward, done = env.step(action)
             # Record the transition
 
-            #have to take the bricks list and make it an immutable item
+            # have to take the bricks list and make it an immutable item
 
             transitions.append((state, action, reward))
             total_reward += reward
             state = next_state
+
+            rewards_per_timestep.append([timestep, total_reward]) # for plotting 
+            timestep += 1 
             
 
         # After each episode, update the agent's Q values
@@ -56,5 +62,8 @@ def train_agent(agent, env, episodes):
 
         if (episode+1)== episodes:
             print("done")
+
+    visualizer.rewards_time(rewards_per_timestep)
+
 
     return rewards
