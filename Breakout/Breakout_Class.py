@@ -1,15 +1,19 @@
 import numpy as np
 import random
-#from Breakout.renderer import renderer
+from Breakout.renderer import renderer
+import time
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=True):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5
         self.max_timesteps=max_timesteps
         self.timesteps= 0
-        #self.renderer = self.renderer(False)
+        self.rendering = rendering
+        if self.render: 
+            self.renderer = renderer(self)
+
         self.reset()
 
     def reset(self):
@@ -53,12 +57,22 @@ class Breakout:
 
     def _generate_bricks(self):
         bricks = []
-        for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
-            brick = []
-            for j in range(3):  # For each block of the brick
-                if i + j < self.grid_size[0]:  # To prevent bricks going out of the grid
-                    brick.append([i + j, 0])  # Arrange the blocks of the brick horizontally
-            bricks.append(brick)
+        # for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
+        #     brick = []
+        #     for j in range(3):  # For each block of the brick
+        #         if i + j < self.grid_size[0]:  # To prevent bricks going out of the grid
+        #             brick.append([i + j, 0])  # Arrange the blocks of the brick horizontally
+        #     bricks.append(brick)
+        # return bricks
+    
+        for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1): # Adding bricks for each row, step size of 3
+            for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
+                brick = []
+                for j in range(3):  # For each block of the brick
+                    if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
+                            brick.append([i + j, k])  # Arrange the blocks of the brick horizontally
+                if len(bricks) < self.num_bricks:
+                    bricks.append(brick)
         return bricks
 
     def _get_state(self):
@@ -138,6 +152,8 @@ class Breakout:
 
         return self._get_state(), reward, self.done
 
-    #def render(self, render=False): 
-        #if render:
-            #self.renderer.render()
+    def render(self): 
+        if self.rendering:
+            self.renderer.render()            
+            time.sleep(0.02)
+

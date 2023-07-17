@@ -3,7 +3,7 @@ from Breakout.Breakout_Class import Breakout
 from Agents.Monte_Carlo_Agent import MonteCarloAgentES
 from Training.train_MC_Agent import train_agent
 
-env = Breakout(max_timesteps=1000)
+env = Breakout(max_timesteps=1000, rendering=False)
 agent = MonteCarloAgentES()
 
 # Let's train the agent for 1000 episodes

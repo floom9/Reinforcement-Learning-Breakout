@@ -24,6 +24,6 @@ for i in range(num_games):
         action = np.random.choice(choices)
         state, reward, done = game.step(action)
         game.render()
-        time.sleep(0.1)
+        time.sleep(0.02)
 
         
