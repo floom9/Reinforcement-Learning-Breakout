@@ -136,11 +136,11 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            reward += -10 # punishment for missing the ball
+            reward += -200 # punishment for missing the ball
             self.ingame_reset()
         # Check if all bricks are destroyed
         if len(self.bricks) == 0:
-            reward= 0
+            # reward = 0
             self.done = True # End of episode
             reward += 1000 # reward for winning the game
 

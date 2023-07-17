@@ -44,7 +44,7 @@ def train_agent(agent, env, episodes):
             total_reward += reward
             state = next_state
 
-            rewards_per_timestep.append([timestep, total_reward]) # for plotting 
+            rewards_per_timestep.append([timestep, total_reward, episode]) # for plotting 
             timestep += 1 
             
 

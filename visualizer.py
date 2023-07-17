@@ -7,6 +7,6 @@ sns.set_style("whitegrid")
 
 
 def rewards_time(rewards_per_timestep):
-    data = pd.DataFrame(rewards_per_timestep, columns=['step', 'reward'])
-    sns.scatterplot(x='step', y='reward', data=data, alpha=0.6)
+    data = pd.DataFrame(rewards_per_timestep, columns=['step', 'reward', 'episode'])
+    sns.scatterplot(x='step', y='reward', data=data, hue='episode', alpha=0.6)
     plt.savefig(imgpath + 'rewards_time.png', dpi=300)
