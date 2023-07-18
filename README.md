@@ -1,5 +1,5 @@
 # Reinforcement-Learning-Breakout
-Applying Reinforcement Learning for the videogame Breakout (1976)
+Applying Reinforcement Learning for the videogame Breakout (1976) with own agent class.
 
 ## Setup
 Environment:
@@ -10,7 +10,7 @@ conda activate breakout
 pip install -r requirements.txt
 ```
 
-Ran into some issues installing pygame via conda. Installing it from the conda-forge repository works: 
+If you have issues installing pygame. Install it from the conda-forge repository: 
 
 ```bash
 conda install -c conda-forge pygame

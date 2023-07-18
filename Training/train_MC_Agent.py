@@ -1,8 +1,10 @@
 import time 
 import numpy as np
+import matplotlib.pyplot as plt
+
 #from Breakout.renderer import renderer
 
-def train_agent(agent, env, episodes, render=False):
+def train_agent(agent, env, episodes, render=False, exploring_starts=True):
     rewards = []
 
     for episode in range(episodes):
@@ -11,7 +13,11 @@ def train_agent(agent, env, episodes, render=False):
 
 
         # Exploring starts random start state
-        state = env.random_reset()
+        if (exploring_starts):
+            state = env.random_reset()
+        else:
+            state = env.ingame_reset()
+
         done = False
         # exploring start random first action
 
@@ -66,3 +72,23 @@ def train_agent(agent, env, episodes, render=False):
             print("done")
 
     return rewards
+
+
+def plot_rewards(rewards, moving_avg_window=10):
+    # Plot raw rewards
+    plt.plot(rewards, label='Raw rewards')
+
+    # Also plot the moving average of rewards
+    moving_avg_rewards = np.convolve(rewards, np.ones(moving_avg_window)/moving_avg_window, mode='valid')
+    plt.plot(range(moving_avg_window-1, len(rewards)), moving_avg_rewards, label=f'Moving average ({moving_avg_window} episodes)')
+
+    # Add labels and legend
+    plt.title('Rewards per episode')
+    plt.xlabel('Episode')
+    plt.ylabel('Reward')
+    plt.legend()
+
+    # Set y-axis limit
+    plt.ylim([-1000, plt.ylim()[1]])
+
+    plt.show()
