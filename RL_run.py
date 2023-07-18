@@ -5,9 +5,10 @@ from Training.train_MC_Agent import train_agent, plot_rewards
 import time
 import pickle
 
+brickLayout= "TopRow"
 shouldRender= False
-#method="ES"
-method="FV"
+method="ES"
+#method="FV"
 maxTimesteps= 100000
 numOfEpisodes= 1000
 saveAgent= True

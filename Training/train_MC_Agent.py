@@ -102,12 +102,13 @@ def plot_rewards(rewards, moving_avg_window=10,savePath=None):
     plt.legend()
 
     # Set y-axis limit
-    plt.ylim([-1000, plt.ylim()[1]])
-
-    plt.show()
-
+    plt.ylim([-2000, 30])
     if savePath is not None:
         #save plot at savePath
         path= 'Plots/Rewards_'+savePath+ '.png'
         plt.savefig(path)
+
+    plt.show()
+
+
     
