@@ -34,9 +34,7 @@ if CalculateAvgReward:
     # Let's train the agent for 1000 episodes
     rewards, exectuionTimes = test_agent_average_Reward(agent=agent, env=env, episodes=numOfEpisodes)
     endTime= time.time()
-    print(rewards)
-    print(exectuionTimes)
-
+    
     avgReward = sum(rewards)/len(rewards)
     print('Average Reward:{}'.format(avgReward))
 
