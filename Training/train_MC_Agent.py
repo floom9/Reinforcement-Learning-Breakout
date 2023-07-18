@@ -1,16 +1,16 @@
-import time 
 import numpy as np
 import matplotlib.pyplot as plt
 
-#from Breakout.renderer import renderer
+import visualizer as visualizer
 
 def train_agent(agent, env, episodes, render=False, exploring_starts=True):
     rewards = []
+    timestep = 0
+    rewards_per_timestep = []
 
     for episode in range(episodes):
         # Reset environment and get initial state
         #state = env.reset()
-
 
         # Exploring starts random start state
         if (exploring_starts):
@@ -37,19 +37,21 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         while not done:
             # Choose action based on the agent's policy
             action = agent.act(state)
-            if render: 
-                env.render()
-                time.sleep(0.02)
+            
+            env.render()
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
             # Record the transition
 
-            #have to take the bricks list and make it an immutable item
+            # have to take the bricks list and make it an immutable item
 
             transitions.append((state, action, reward))
             total_reward += reward
             state = next_state
+
+            rewards_per_timestep.append([timestep, total_reward, episode]) # for plotting 
+            timestep += 1 
             
 
         # After each episode, update the agent's Q values
@@ -61,15 +63,14 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         # Reduce the epsilon (Exploration vs. Exploitation trade-off)
         agent.update_epsilon(episode)
 
-        # only rendering end step - useful?
-        # if render:
-        #   env.render()
-
         if (episode+1) % 100 == 0:
             print(f'Episode {episode+1}/{episodes}: Reward {total_reward}')
 
         if (episode+1)== episodes:
             print("done")
+
+    visualizer.rewards_time(rewards_per_timestep)
+
 
     return rewards
 
