@@ -32,7 +32,7 @@ for num_bricks in num_bricksList:
     for brick_layout in brick_layouts:
         for methods in methods:
             for maxTimesteps in maxTimestepsList:
-                for numEpisodes in numOfEpisodesList:
+                for numOfEpisodes in numOfEpisodesList:
                     # path to files that will be saved
                     TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
                     print("Working on")
