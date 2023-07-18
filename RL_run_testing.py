@@ -20,6 +20,7 @@ num_bricks=9
 CalculateAvgReward= True
 
 
+
 TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
 
 AgentPath = 'TrainedAgents/' +TrainInfoFilePath +'.pkl'
@@ -34,7 +35,7 @@ if CalculateAvgReward:
     # Let's train the agent for 1000 episodes
     rewards, exectuionTimes = test_agent_average_Reward(agent=agent, env=env, episodes=numOfEpisodes)
     endTime= time.time()
-    
+
     avgReward = sum(rewards)/len(rewards)
     print('Average Reward:{}'.format(avgReward))
 

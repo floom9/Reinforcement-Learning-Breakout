@@ -20,56 +20,70 @@ saveAgent= True
 plotRewards= True
 
 
-# path to files that will be saved
-TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
+brick_layouts = ["TopRow","MiddleRow","ReversePyramid"]
+methods= ["ES","FV"]
+num_bricksList= [5,9]
+#maxTimestepsList=[100,1000,10000,30000]
+#numOfEpisodesList =[100,1000,10000,100000]
+
+maxTimestepsList=[100,1000,10000]
+numOfEpisodesList =[100,1000,10000]
+for num_bricks in num_bricksList:
+    for brick_layout in brick_layouts:
+        for methods in methods:
+            for maxTimesteps in maxTimestepsList:
+                for numEpisodes in numOfEpisodesList:
+                    # path to files that will be saved
+                    TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
+                    print("Working on")
+                    print(TrainInfoFilePath)
+
+                    if method== "ES":
+                        agent = MonteCarloAgent_ES()
+                        exploringStarts=True
+                    elif method == "FV":
+                        agent = MonteCarloAgent_FV()
+                        exploringStarts = False
+                    else: 
+                        raise TypeError("Method must be either ES or FV but is {}".format(method))
+
+                    env = Breakout(max_timesteps=maxTimesteps, brick_layout=brick_layout, num_bricks=num_bricks)
+                    startTime= time.time()
+                    # Let's train the agent for 1000 episodes
+                    rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts)
+                    endTime= time.time()
+
+                    overallTrainingTime = endTime-startTime
+                    avgExecutionTime = sum(exectuionTimes)/len(exectuionTimes)
 
 
-if method== "ES":
-    agent = MonteCarloAgent_ES()
-    exploringStarts=True
-elif method == "FV":
-    agent = MonteCarloAgent_FV()
-    exploringStarts = False
-else: 
-    raise TypeError("Method must be either ES or FV but is {}".format(method))
-
-env = Breakout(max_timesteps=maxTimesteps, brick_layout=brick_layout, num_bricks=num_bricks)
-startTime= time.time()
-# Let's train the agent for 1000 episodes
-rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts)
-endTime= time.time()
-
-overallTrainingTime = endTime-startTime
-avgExecutionTime = sum(exectuionTimes)/len(exectuionTimes)
+                    keyFindingsDict= {
+                                    'BrickLayout': brick_layout,
+                                    'numOfBricks': num_bricks,
+                                    'numOfEpisodes': numOfEpisodes,
+                                    'maxTimesteps': maxTimesteps,
+                                    'OverallTrainingTime': overallTrainingTime,
+                                    'avgExcutionTimePerEps' :  avgExecutionTime
+                    }
 
 
-keyFindingsDict= {
-                'BrickLayout': brick_layout,
-                'numOfBricks': num_bricks,
-                'numOfEpisodes': numOfEpisodes,
-                'maxTimesteps': maxTimesteps,
-                'OverallTrainingTime': overallTrainingTime,
-                'avgExcutionTimePerEps' :  avgExecutionTime
-}
+                    if saveKeyFindings:
+                        jsonPath= 'CompTimesAndAvgRewards/' +TrainInfoFilePath +'.json'
+                        with open(jsonPath, "w") as outfile:
+                            json.dump(keyFindingsDict, outfile)
 
 
-if saveKeyFindings:
-    jsonPath= 'CompTimesAndAvgRewards/' +TrainInfoFilePath +'.json'
-    with open(jsonPath, "w") as outfile:
-        json.dump(keyFindingsDict, outfile)
+                    if plotRewards:
+                        print("Plotting Rewards")
+                        plot_rewards(rewards, moving_avg_window=10, savePath=TrainInfoFilePath)
+                        print("Plotting Rewards done")
 
 
-if plotRewards:
-    print("Plotting Rewards")
-    plot_rewards(rewards, moving_avg_window=10, savePath=TrainInfoFilePath)
-    print("Plotting Rewards done")
+                    if saveAgent:
+                        print("saving Agent")
+                        AgentPath = 'TrainedAgents/' +TrainInfoFilePath +'.pkl'
+                        with open(AgentPath, 'wb') as f:
+                            pickle.dump(agent, f)
+                        print("saving Agent done")
 
-
-if saveAgent:
-    print("saving Agent")
-    AgentPath = 'TrainedAgents/' +TrainInfoFilePath +'.pkl'
-    with open(AgentPath, 'wb') as f:
-        pickle.dump(agent, f)
-    print("saving Agent done")
-
-print("done")
+                    print("done")

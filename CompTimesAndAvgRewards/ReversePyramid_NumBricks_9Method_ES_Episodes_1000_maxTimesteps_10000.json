@@ -1,0 +1,1 @@
+{"BrickLayout": "ReversePyramid", "numOfBricks": 9, "numOfEpisodes": 1000, "maxTimesteps": 10000, "OverallTrainingTime": 34.479958295822144, "avgExcutionTimePerEps": 0.03445198512077331}
