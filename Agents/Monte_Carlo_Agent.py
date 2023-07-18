@@ -2,7 +2,7 @@ import numpy as np
 from collections import defaultdict
 
 #Monte Carlo Agent with exploring starts
-class MonteCarloAgentES:
+class MonteCarloAgent_ES:
     def __init__(self):
         self.action_space = [-1, 0, 1]
         # might needs to be replaced with random values for Q that sum to one
@@ -35,8 +35,6 @@ class MonteCarloAgentES:
                 self.N[sa] += 1
                 #self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
                 self.Q[sa] = (self.Q[sa]*(self.N[sa]-1)+ G)/self.N[sa]
-
-            total_reward *= self.gamma
 
             
 
@@ -64,8 +62,8 @@ class MonteCarloAgentES:
         self.epsilon = max(1.0 / (1.0 + t), 0.05)
 
 #################################################################################################
-
-class MonteCarloAgent_Explorer:
+# Monte carlo first visit 
+class MonteCarloAgent_FV:
     def __init__(self):
         self.action_space = [-1, 0, 1]
         # might needs to be replaced with random values for Q that sum to one
@@ -98,8 +96,6 @@ class MonteCarloAgent_Explorer:
                 self.N[sa] += 1
                 #self.Q[sa] += (total_reward - self.Q[sa]) / self.N[sa]
                 self.Q[sa] = (self.Q[sa]*(self.N[sa]-1)+ G)/self.N[sa]
-
-            total_reward *= self.gamma
 
             
 

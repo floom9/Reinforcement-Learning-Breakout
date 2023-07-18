@@ -120,7 +120,7 @@ class Breakout:
             if self.ball_position in brick:
                 self.bricks.remove(brick)
                 self.ball_direction[1] *= -1 # Ball gets reflected
-                reward += 50 # reward for hitting a brick
+                #reward += 50 # reward for hitting a brick
                 hit = True
 
         # Check if ball hits paddle
@@ -137,13 +137,13 @@ class Breakout:
 
         # Check if ball goes past the paddle
         if self.ball_position[1] > self.paddle_position[1]:
-            reward += -200 # punishment for missing the ball
+            #reward += -200 # punishment for missing the ball
             self.ingame_reset()
         # Check if all bricks are destroyed
         if len(self.bricks) == 0:
             # reward = 0
             self.done = True # End of episode
-            reward += 1000 # reward for winning the game
+            #reward += 1000 # reward for winning the game
 
         # count timesteps in this run
         self.timesteps += 1

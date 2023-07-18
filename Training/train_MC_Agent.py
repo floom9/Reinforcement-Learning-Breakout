@@ -1,44 +1,46 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import time
 import visualizer as visualizer
 
 def train_agent(agent, env, episodes, render=False, exploring_starts=True):
     rewards = []
     timestep = 0
     rewards_per_timestep = []
+    print("start Training")
 
     for episode in range(episodes):
-        # Reset environment and get initial state
-        #state = env.reset()
-
-        # Exploring starts random start state
-        if (exploring_starts):
-            state = env.random_reset()
-        else:
-            state = env.ingame_reset()
-
-        done = False
-        # exploring start random first action
-
         # Record the transitions
         transitions = []
         total_reward = 0
+        reward=0
+        state= ()
+        next_state=()
+        done = False
 
-        # random action in timestep 0
-        action = np.random.choice(agent.action_space)
-        next_state, reward, done = env.step(action)
-        # Record the transition
-        transitions.append((state, action, reward))
+        # Reset environment and get initial state
 
-        total_reward += reward
-        state = next_state
+        if (exploring_starts):
+            # Exploring starts with random start state and random first action
+            state = env.random_reset()
+            # random action in timestep 0
+            action = np.random.choice(agent.action_space)
+            next_state, reward, done = env.step(action)
+            # Record the transition
+            transitions.append((state, action, reward))
+            total_reward += reward
+            state = next_state
+            rewards_per_timestep.append([timestep, total_reward, episode]) # for plotting 
+            timestep += 1 
+        else:
+            state = env.ingame_reset()
+
 
         while not done:
             # Choose action based on the agent's policy
             action = agent.act(state)
-            
-            env.render()
+            if render:
+                env.render()
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
@@ -67,9 +69,9 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
             print(f'Episode {episode+1}/{episodes}: Reward {total_reward}')
 
         if (episode+1)== episodes:
-            print("done")
-
-    visualizer.rewards_time(rewards_per_timestep)
+            print("Training done")
+    if render:
+        visualizer.rewards_time(rewards_per_timestep)
 
 
     return rewards
