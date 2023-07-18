@@ -4,13 +4,14 @@ from Breakout.renderer import renderer
 import time
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=True):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=True, brick_layout="TopRow"):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5
         self.max_timesteps=max_timesteps
         self.timesteps= 0
         self.rendering = rendering
+        self.brick_layout=brick_layout
         if rendering: 
             self.renderer = renderer(self)
 
@@ -65,16 +66,44 @@ class Breakout:
         #             brick.append([i + j, 0])  # Arrange the blocks of the brick horizontally
         #     bricks.append(brick)
         # return bricks
-    
-        for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1): # Adding bricks for each row, step size of 3
-            for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
-                brick = []
-                for j in range(3):  # For each block of the brick
-                    if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
+
+        if self.brick_layout=="TopRow":
+            for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1): # Adding bricks for each row, step size of 3
+                for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
+                    brick = []
+                    for j in range(3):  # For each block of the brick
+                        if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
+                                brick.append([i + j, k])  # Arrange the blocks of the brick horizontally in row k 
+                    if len(bricks) < self.num_bricks:
+                        bricks.append(brick)
+            return bricks
+
+        if self.brick_layout=="MiddleRow":
+            for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1): # Adding bricks for each row, step size of 3
+                for i in range(0, self.grid_size[0], 3):  # Step size of 3 to make space for each brick
+                    brick = []
+                    for j in range(3):  # For each block of the brick
+                        if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
+                                brick.append([i + j, k+3])  # Arrange the blocks of the brick horizontally in row k 
+                    if len(bricks) < self.num_bricks:
+                        bricks.append(brick)
+            return bricks
+
+        if self.brick_layout=="ReversePyramid":
+            margin = 0  # Margin from sides
+            for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1):  # Adding bricks for each row
+                for i in range(margin, self.grid_size[0] - margin, 3):  # Step size of 3 to make space for each brick
+                    brick = []
+                    for j in range(3):  # For each block of the brick
+                        if i + j < self.grid_size[0] - margin and len(bricks) < self.num_bricks: 
                             brick.append([i + j, k])  # Arrange the blocks of the brick horizontally in row k 
-                if len(bricks) < self.num_bricks:
-                    bricks.append(brick)
-        return bricks
+                    if len(brick) == 3 and len(bricks) < self.num_bricks:
+                        bricks.append(brick)
+                margin += 1  # Increase margin for next row
+            return bricks
+
+
+
 
     def _get_state(self):
         stateTuple = (tuple(self.ball_position), tuple(self.ball_direction), tuple(self.paddle_position), self.paddle_speed, tuple(tuple(tuple(brick) for brick in bricks) for bricks in self.bricks))

@@ -13,9 +13,10 @@ maxTimesteps= 100000
 numOfEpisodes= 1000
 saveAgent= True
 plotRewards= True
-
-
-
+#brick_layout="TopRow"
+#brick_layout="MiddleRow"
+brick_layout="ReversePyramid"
+num_bricks=9
 
 if method== "ES":
     agent = MonteCarloAgent_ES()
@@ -26,7 +27,7 @@ elif method == "FV":
 else: 
     raise TypeError("Method must be either ES or FV but is {}".format(method))
 
-env = Breakout(max_timesteps=maxTimesteps, rendering=shouldRender)
+env = Breakout(max_timesteps=maxTimesteps, rendering=shouldRender, brick_layout=brick_layout, num_bricks=num_bricks)
 startTime= time.time()
 # Let's train the agent for 1000 episodes
 rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts,render=shouldRender)
