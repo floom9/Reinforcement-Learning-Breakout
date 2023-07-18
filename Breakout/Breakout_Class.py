@@ -32,6 +32,7 @@ class Breakout:
         self.ball_position = [np.random.choice(range(self.grid_size[0])), np.random.choice(range(self.grid_size[1]))] # place ball in random place in grid
         self.ball_direction = [np.random.choice([-2, -1, 0, 1, 2]), np.random.choice([-1,1])] # initial direction of the ball
         self.paddle_speed = np.random.choice([-2,-1,0,1,2])
+        self.done=False
 
         # using this method a high and low number of bricks is equally likely 
         # higher chance of few brick leads than if we give 50/50 chance for each brick to exist 

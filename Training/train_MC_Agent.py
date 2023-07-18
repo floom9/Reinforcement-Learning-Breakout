@@ -35,7 +35,7 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
             rewards_per_timestep.append([timestep, total_reward, episode]) # for plotting 
             timestep += 1 
         else:
-            state = env.ingame_reset()
+            state = env.reset()
 
 
         while not done:
