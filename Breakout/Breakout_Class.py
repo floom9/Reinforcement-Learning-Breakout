@@ -84,12 +84,12 @@ class Breakout:
                     brick = []
                     for j in range(3):  # For each block of the brick
                         if i + j < self.grid_size[0] and len(bricks) < self.num_bricks: 
-                                brick.append([i + j, k+3])  # Arrange the blocks of the brick horizontally in row k 
+                                brick.append([i + j, k+1])  # Arrange the blocks of the brick horizontally in row k 
                     if len(bricks) < self.num_bricks:
                         bricks.append(brick)
             return bricks
 
-        if self.brick_layout=="ReversePyramid":
+        if self.brick_layout == "ReversePyramid":
             margin = 0  # Margin from sides
             for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1):  # Adding bricks for each row
                 for i in range(3*margin, self.grid_size[0] - (3*margin), 3):  # Step size of 3 to make space for each brick
@@ -99,6 +99,8 @@ class Breakout:
                             brick.append([i + j, k])  # Arrange the blocks of the brick horizontally in row k 
                     if len(brick) == 3 and len(bricks) < self.num_bricks:
                         bricks.append(brick)
+                if len(bricks) >= self.num_bricks:  # stop creating bricks once we reach the desired number
+                    break
                 margin += 1  # Increase margin for next row
             return bricks
 
