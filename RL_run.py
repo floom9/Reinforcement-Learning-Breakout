@@ -2,6 +2,7 @@ import numpy as np
 from Breakout.Breakout_Class import Breakout
 from Agents.Monte_Carlo_Agent import MonteCarloAgent_ES, MonteCarloAgent_FV
 from Training.train_MC_Agent import train_agent, plot_rewards
+import time
 import pickle
 
 shouldRender= False
@@ -24,16 +25,29 @@ elif method == "FV":
 else: 
     raise TypeError("Method must be either ES or FV but is {}".format(method))
 
+startTime= time.time()
 # Let's train the agent for 1000 episodes
-rewards = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts,render=shouldRender)
+rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts,render=shouldRender)
+endTime= time.time()
+
+overallTrainingTime = endTime-startTime
+avgExecutionTime = sum(exectuionTimes)/len(exectuionTimes)
+
+
+keyFindingsDict= {'Overall Training Time': overallTrainingTime,
+                  'avgExcutionTime' :  avgExecutionTime,
+}
+
+
+TrainInfoFilePath= 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps) +'_Render_' + str(shouldRender)
+
 
 if plotRewards:
     print("Plotting Rewards")
     print("close plot to proceed")
-    plot_rewards(rewards)
+    plot_rewards(rewards,TrainInfoFilePath)
     print("Ploting Rewards done")
 
-TrainInfoFilePath= 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps) +'_Render_' + str(shouldRender)
 
 if saveAgent:
     print("saving Agent")

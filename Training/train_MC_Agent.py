@@ -7,8 +7,10 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
     rewards = []
     timestep = 0
     rewards_per_timestep = []
+    executionTime =[]
     print("start Training")
 
+    startTime = time.time()
     for episode in range(episodes):
         # Record the transitions
         transitions = []
@@ -65,19 +67,27 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         # Reduce the epsilon (Exploration vs. Exploitation trade-off)
         agent.update_epsilon(episode)
 
-        if (episode+1) % 100 == 0:
+        if (episode+1) % 100 == 0 or episode== 0:
             print(f'Episode {episode+1}/{episodes}: Reward {total_reward}')
 
         if (episode+1)== episodes:
             print("Training done")
+
+        #save time needed per episode
+        endTime = time.time()
+        executionTime.append(endTime-startTime)
+        startTime= time.time()
+    
     if render:
         visualizer.rewards_time(rewards_per_timestep)
 
 
-    return rewards
+    return (rewards, executionTime)
 
 
-def plot_rewards(rewards, moving_avg_window=10):
+def plot_rewards(rewards, moving_avg_window=10,savePath=None):
+    #close old plots
+    plt.close('all')
     # Plot raw rewards
     plt.plot(rewards, label='Raw rewards')
 
@@ -95,3 +105,9 @@ def plot_rewards(rewards, moving_avg_window=10):
     plt.ylim([-1000, plt.ylim()[1]])
 
     plt.show()
+
+    if savePath is not None:
+        #save plot at savePath
+        path= 'Plots/Rewards_'+savePath+ '.png'
+        plt.savefig(path)
+    
