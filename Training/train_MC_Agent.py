@@ -82,7 +82,7 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         visualizer.rewards_time(rewards_per_timestep)
 
 
-    return (rewards, executionTime)
+    return rewards, executionTime
 
 
 def plot_rewards(rewards, moving_avg_window=10,savePath=None):

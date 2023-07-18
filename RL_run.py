@@ -8,7 +8,7 @@ import pickle
 shouldRender= False
 method="ES"
 #method="FV"
-maxTimesteps= 1000
+maxTimesteps= 100000
 numOfEpisodes= 1000
 saveAgent= True
 plotRewards= True
@@ -45,7 +45,7 @@ TrainInfoFilePath= 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_ma
 if plotRewards:
     print("Plotting Rewards")
     print("close plot to proceed")
-    plot_rewards(rewards,TrainInfoFilePath)
+    plot_rewards(rewards,savePath=TrainInfoFilePath)
     print("Ploting Rewards done")
 
 

@@ -53,7 +53,6 @@ class Breakout:
         self.paddle_speed = 0
         self.bricks = self._generate_bricks() 
         self.done = False
-        self.timesteps=0
         return self._get_state()
 
     def _generate_bricks(self):
