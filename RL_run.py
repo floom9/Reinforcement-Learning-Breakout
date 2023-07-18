@@ -4,19 +4,25 @@ from Agents.Monte_Carlo_Agent import MonteCarloAgent_ES, MonteCarloAgent_FV
 from Training.train_MC_Agent import train_agent, plot_rewards
 import time
 import pickle
+import json
 
-brickLayout= "TopRow"
-shouldRender= False
 method="ES"
 #method="FV"
 maxTimesteps= 100000
 numOfEpisodes= 1000
-saveAgent= True
-plotRewards= True
 #brick_layout="TopRow"
 #brick_layout="MiddleRow"
 brick_layout="ReversePyramid"
 num_bricks=9
+
+saveKeyFindings =True
+saveAgent= True
+plotRewards= True
+
+
+# path to files that will be saved
+TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
+
 
 if method== "ES":
     agent = MonteCarloAgent_ES()
@@ -27,29 +33,36 @@ elif method == "FV":
 else: 
     raise TypeError("Method must be either ES or FV but is {}".format(method))
 
-env = Breakout(max_timesteps=maxTimesteps, rendering=shouldRender, brick_layout=brick_layout, num_bricks=num_bricks)
+env = Breakout(max_timesteps=maxTimesteps, brick_layout=brick_layout, num_bricks=num_bricks)
 startTime= time.time()
 # Let's train the agent for 1000 episodes
-rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts,render=shouldRender)
+rewards, exectuionTimes = train_agent(agent=agent, env=env, episodes=numOfEpisodes, exploring_starts=exploringStarts)
 endTime= time.time()
 
 overallTrainingTime = endTime-startTime
 avgExecutionTime = sum(exectuionTimes)/len(exectuionTimes)
 
 
-keyFindingsDict= {'Overall Training Time': overallTrainingTime,
-                  'avgExcutionTime' :  avgExecutionTime,
+keyFindingsDict= {
+                'BrickLayout': brick_layout,
+                'numOfBricks': num_bricks,
+                'numOfEpisodes': numOfEpisodes,
+                'maxTimesteps': maxTimesteps,
+                'OverallTrainingTime': overallTrainingTime,
+                'avgExcutionTimePerEps' :  avgExecutionTime
 }
 
 
-TrainInfoFilePath= 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps) +'_Render_' + str(shouldRender)
+if saveKeyFindings:
+    jsonPath= 'CompTimesAndAvgRewards/' +TrainInfoFilePath +'.json'
+    with open(jsonPath, "w") as outfile:
+        json.dump(keyFindingsDict, outfile)
 
 
 if plotRewards:
     print("Plotting Rewards")
-    print("close plot to proceed")
     plot_rewards(rewards, moving_avg_window=10, savePath=TrainInfoFilePath)
-    print("Ploting Rewards done")
+    print("Plotting Rewards done")
 
 
 if saveAgent:

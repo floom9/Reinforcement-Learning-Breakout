@@ -4,7 +4,7 @@ from Breakout.renderer import renderer
 import time
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=True, brick_layout="TopRow"):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=False, brick_layout="TopRow"):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5
@@ -92,10 +92,10 @@ class Breakout:
         if self.brick_layout=="ReversePyramid":
             margin = 0  # Margin from sides
             for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1):  # Adding bricks for each row
-                for i in range(margin, self.grid_size[0] - margin, 3):  # Step size of 3 to make space for each brick
+                for i in range(3*margin, self.grid_size[0] - (3*margin), 3):  # Step size of 3 to make space for each brick
                     brick = []
                     for j in range(3):  # For each block of the brick
-                        if i + j < self.grid_size[0] - margin and len(bricks) < self.num_bricks: 
+                        if i + j < self.grid_size[0] - (3*margin) and len(bricks) < self.num_bricks: 
                             brick.append([i + j, k])  # Arrange the blocks of the brick horizontally in row k 
                     if len(brick) == 3 and len(bricks) < self.num_bricks:
                         bricks.append(brick)
@@ -107,6 +107,11 @@ class Breakout:
 
     def _get_state(self):
         stateTuple = (tuple(self.ball_position), tuple(self.ball_direction), tuple(self.paddle_position), self.paddle_speed, tuple(tuple(tuple(brick) for brick in bricks) for bricks in self.bricks))
+        return stateTuple
+    
+    # public function needed for testing
+    def get_state_public(self):
+        stateTuple= self._get_state()
         return stateTuple
 
     def step(self, action):
@@ -185,5 +190,5 @@ class Breakout:
     def render(self): 
         if self.rendering:
             self.renderer.render()            
-            time.sleep(0.02)
+            time.sleep(0.05)
 

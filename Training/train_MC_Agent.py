@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import time
 import visualizer as visualizer
 
-def train_agent(agent, env, episodes, render=False, exploring_starts=True):
+def train_agent(agent, env, episodes, exploring_starts=True):
     rewards = []
     timestep = 0
     rewards_per_timestep = []
@@ -41,8 +41,6 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         while not done:
             # Choose action based on the agent's policy
             action = agent.act(state)
-            if render:
-                env.render()
 
             # Execute the action in the environment
             next_state, reward, done = env.step(action)
@@ -78,14 +76,11 @@ def train_agent(agent, env, episodes, render=False, exploring_starts=True):
         executionTime.append(endTime-startTime)
         startTime= time.time()
     
-    if render:
-        visualizer.rewards_time(rewards_per_timestep)
-
 
     return rewards, executionTime
 
 
-def plot_rewards(rewards, moving_avg_window=10,savePath=None):
+def plot_rewards(rewards, moving_avg_window=10,savePath=None, showPlot=False):
     #close old plots
     plt.close('all')
     # Plot raw rewards
@@ -108,7 +103,9 @@ def plot_rewards(rewards, moving_avg_window=10,savePath=None):
         path= 'Plots/Rewards_'+savePath+ '.png'
         plt.savefig(path)
 
-    plt.show()
+    if showPlot:
+        print("close plot to proceed")
+        plt.show()
 
 
     
