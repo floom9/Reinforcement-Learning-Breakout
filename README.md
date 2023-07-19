@@ -10,9 +10,11 @@ conda activate breakout
 pip install -r requirements.txt
 ```
 
-If you have issues installing pygame and seaborn. Install it from the conda-forge repository: 
+If you have issues installing pygame and seaborn, install it from the conda-forge repository: 
 
 ```bash
 conda install -c conda-forge pygame
 conda install -c conda-forge seaborn
 ```
+
+We are using the external library [https://imagemagick.org/](ImageMagick) for gif creation.

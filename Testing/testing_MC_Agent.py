@@ -54,8 +54,7 @@ def test_agent_average_Reward(agent, env, episodes):
 def test_agent_certain_start(agent, env, render=False, startingDirection= 0):
     rewards = []
     timestep = 0
-    rewards_per_timestep = []
-    print("start Testing for certain Start")
+    print(f'start testing for start {startingDirection}')
 
 
 
@@ -90,7 +89,7 @@ def test_agent_certain_start(agent, env, render=False, startingDirection= 0):
     rewards.append(total_reward)
 
     if render:
-        visualizer.rewards_time(rewards_per_timestep)
+        env.render()
 
 
     return transitions

@@ -1,4 +1,6 @@
 import pygame
+import time
+import os
 
 # Define colors
 BLACK = (0, 0, 0)
@@ -22,6 +24,8 @@ class renderer:
         self.grid_width = env.grid_size[0] * CELL_SIZE
         self.grid_heigth = env.grid_size[1] * CELL_SIZE
         self.screen = pygame.display.set_mode((self.grid_width, self.grid_heigth))
+        self.imgCounter = 0
+        self.filelist = []
 
         pygame.display.set_caption("Breakout")
 
@@ -48,9 +52,11 @@ class renderer:
         paddle_position = state[2]
         bricks = state[4]
         self.draw(ball_position, paddle_position, bricks)
+        self.savePNG()
+        # time.sleep(0.1)
 
-    def display_episode(self, episode):
-        font = pygame.font.SysFont('arial', 50)
-        text = font.render(str(episode), True, WHITE)
-        self.screen.blit(text, (10, self.grid_heigth - 60))
-        pygame.display.update()
+    def savePNG(self):
+        filename = '.tmp/' + str(self.imgCounter) + '.png'
+        pygame.image.save(self.screen, filename) 
+        self.filelist.append(filename)
+        self.imgCounter += 1

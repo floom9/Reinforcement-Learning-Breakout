@@ -5,19 +5,20 @@ from Testing.testing_MC_Agent import test_agent_average_Reward, test_agent_certa
 import time
 import pickle
 import json
+import visualizer
 
 
 method="ES"
 #method="FV"
-maxTimesteps= 100000
+maxTimesteps= 10000
 numOfEpisodes= 1000
-#brick_layout="TopRow"
+brick_layout="TopRow"
 #brick_layout="MiddleRow"
-brick_layout="ReversePyramid"
-num_bricks=9
+#brick_layout="ReversePyramid"
+num_bricks=5
 
 
-CalculateAvgReward= True
+CalculateAvgReward= False
 
 
 
@@ -59,6 +60,12 @@ if CalculateAvgReward:
 
 
 env2 = Breakout(max_timesteps=maxTimesteps, rendering=True, brick_layout=brick_layout, num_bricks=num_bricks)
+
 #create visulsation for the given starting direction of ball -2,-1,0,1,2
-transitions=test_agent_certain_start(agent=agent, env=env2, render=True, startingDirection= 2)
+startingDirections = [-2, -1, 0, 1, 2]
+
+for direction in startingDirections:
+    test_agent_certain_start(agent, env2, render=True, startingDirection=direction)
+    visualizer.saveGIF(f'{method}_{direction}')
+
 
