@@ -15,7 +15,7 @@ def rewards_time(rewards_per_timestep):
 
 def saveGIF(name): 
     # Using external library ImageMagick for automatic gif creation
-    os.system(f'magick convert -size 600x400 -delay 2 -loop 0 ./.tmp/*.png img/{name}.gif')
+    os.system(f'magick convert -size 600x400 -delay 5 -loop 0 ./.tmp/*.png img/{name}.gif')
     # remove files
     for filename in os.listdir('.tmp'):   
         os.unlink(f'.tmp/{filename}')

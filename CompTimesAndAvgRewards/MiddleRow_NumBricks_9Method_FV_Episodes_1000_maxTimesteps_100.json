@@ -1,1 +1,1 @@
-{"BrickLayout": "MiddleRow", "numOfBricks": 9, "numOfEpisodes": 1000, "maxTimesteps": 100, "OverallTrainingTime": 17.3618643283844, "avgExcutionTimePerEps": 0.01734100317955017}
+{"BrickLayout": "MiddleRow", "numOfBricks": 9, "numOfEpisodes": 1000, "maxTimesteps": 100, "OverallTrainingTime": 14.433437824249268, "avgExcutionTimePerEps": 0.0144232177734375}

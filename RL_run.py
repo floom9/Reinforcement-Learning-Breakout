@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from Breakout.Breakout_Class import Breakout
 from Agents.Monte_Carlo_Agent import MonteCarloAgent_ES, MonteCarloAgent_FV
 from Training.train_MC_Agent import train_agent, plot_rewards
@@ -19,9 +20,10 @@ saveKeyFindings =True
 saveAgent= True
 plotRewards= True
 
+compTimes = []
 
 brick_layouts = ["TopRow","MiddleRow","ReversePyramid"]
-methods= ["FV"]
+methods= ["ES", "FV"]
 num_bricksList= [5,9]
 #maxTimestepsList=[100,1000,10000,30000]
 #numOfEpisodesList =[100,1000,10000,100000]
@@ -71,6 +73,7 @@ for num_bricks in num_bricksList:
                         jsonPath= 'CompTimesAndAvgRewards/' +TrainInfoFilePath +'.json'
                         with open(jsonPath, "w") as outfile:
                             json.dump(keyFindingsDict, outfile)
+                        compTimes.append([method, brick_layout, num_bricks, numOfEpisodes, maxTimesteps, overallTrainingTime, avgExecutionTime])
 
 
                     if plotRewards:
@@ -87,3 +90,6 @@ for num_bricks in num_bricksList:
                         print("saving Agent done")
 
                     print("done")
+
+df = pd.DataFrame(compTimes, columns=["method", "BrickLayout", "numOfBricks", "numOfEpisodes", "maxTimesteps", "overallTrainingTime", "avgExecutionTimePerEps"])
+df.to_csv("compTimes.csv")
