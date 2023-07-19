@@ -19,7 +19,7 @@ num_bricks=5
 
 brick_layouts = ["TopRow","MiddleRow","ReversePyramid"]
 methods= ["ES","FV"]
-num_bricksList= [5]
+num_bricksList= [5, 9]
 
 startingDirections = [-2, -1, 0, 1, 2]
 
@@ -78,7 +78,7 @@ for direction in startingDirections:
         for brick_number in num_bricksList:
             for method in methods:
                 print(f'method: {method}, number of bricks: {brick_number}, layout: {layout}, direction: {direction}.')
-                TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
+                TrainInfoFilePath=layout+ '_NumBricks_' + str(brick_number) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
                 AgentPath = 'TrainedAgents/' +TrainInfoFilePath +'.pkl'
                 print("retriving Agent")
                 with open(AgentPath, 'rb') as f:
