@@ -4,7 +4,7 @@ from Breakout.renderer import renderer
 import time
 
 class Breakout:
-    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=True, brick_layout="TopRow"):
+    def __init__(self, grid_size=(15, 10), num_bricks=5, max_timesteps=10000, rendering=False, brick_layout="TopRow"):
         self.grid_size = grid_size
         self.num_bricks = num_bricks
         self.paddle_size = 5

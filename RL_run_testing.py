@@ -17,6 +17,19 @@ brick_layout="TopRow"
 #brick_layout="ReversePyramid"
 num_bricks=5
 
+brick_layouts = ["TopRow","MiddleRow","ReversePyramid"]
+methods= ["ES","FV"]
+num_bricksList= [5]
+
+startingDirections = [-2, -1, 0, 1, 2]
+
+startDict = {-2: "left2", 
+             -1: "left1",
+             0: "middle",
+             1: "right1",
+             2: "right2"}
+
+
 
 CalculateAvgReward= False
 
@@ -58,20 +71,21 @@ if CalculateAvgReward:
 
 
 
-
-env2 = Breakout(max_timesteps=maxTimesteps, rendering=True, brick_layout=brick_layout, num_bricks=num_bricks)
-
 #create visulsation for the given starting direction of ball -2,-1,0,1,2
-startingDirections = [-2, -1, 0, 1, 2]
-
-startDict = {-2: "left2", 
-             -1: "left1",
-             0: "middle",
-             1: "right1",
-             2: "right2"}
 
 for direction in startingDirections:
-    test_agent_certain_start(agent, env2, render=True, startingDirection=direction)
-    visualizer.saveGIF(f'{method}_{num_bricks}_{brick_layout}_{startDict[direction]}')
+    for layout in brick_layouts:
+        for brick_number in num_bricksList:
+            for method in methods:
+                print(f'method: {method}, number of bricks: {brick_number}, layout: {layout}, direction: {direction}.')
+                TrainInfoFilePath=brick_layout+ '_NumBricks_' + str(num_bricks) + 'Method_' + method + '_Episodes_' + str(numOfEpisodes) + '_maxTimesteps_' + str(maxTimesteps)
+                AgentPath = 'TrainedAgents/' +TrainInfoFilePath +'.pkl'
+                print("retriving Agent")
+                with open(AgentPath, 'rb') as f:
+                    agent = pickle.load(f)
+                print("retriving Agent done")
+                env = Breakout(max_timesteps=maxTimesteps, brick_layout=layout, num_bricks=brick_number, rendering=True)
+                test_agent_certain_start(agent, env, render=True, startingDirection=direction)
+                visualizer.saveGIF(f'{method}_{brick_number}_{layout}_{startDict[direction]}')
 
 

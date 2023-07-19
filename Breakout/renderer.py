@@ -26,6 +26,8 @@ class renderer:
         self.screen = pygame.display.set_mode((self.grid_width, self.grid_heigth))
         self.imgCounter = 0
         self.filelist = []
+        if not os.path.exists("../.tmp"):
+            os.mkdir("../.tmp")
 
         pygame.display.set_caption("Breakout")
 

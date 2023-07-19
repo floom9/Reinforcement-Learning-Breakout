@@ -6,7 +6,7 @@ import time
 import pickle
 import json
 
-method="ES"
+# method="ES"
 #method="FV"
 maxTimesteps= 100000
 numOfEpisodes= 1000
@@ -21,16 +21,16 @@ plotRewards= True
 
 
 brick_layouts = ["TopRow","MiddleRow","ReversePyramid"]
-methods= ["ES","FV"]
+methods= ["FV"]
 num_bricksList= [5,9]
 #maxTimestepsList=[100,1000,10000,30000]
 #numOfEpisodesList =[100,1000,10000,100000]
 
 maxTimestepsList=[100,1000,10000]
-numOfEpisodesList =[100,1000,10000]
+numOfEpisodesList =[1000]
 for num_bricks in num_bricksList:
     for brick_layout in brick_layouts:
-        for methods in methods:
+        for method in methods:
             for maxTimesteps in maxTimestepsList:
                 for numOfEpisodes in numOfEpisodesList:
                     # path to files that will be saved

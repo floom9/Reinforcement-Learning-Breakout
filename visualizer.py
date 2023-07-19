@@ -19,3 +19,4 @@ def saveGIF(name):
     # remove files
     for filename in os.listdir('.tmp'):   
         os.unlink(f'.tmp/{filename}')
+    # os.rmdir('.tmp')
