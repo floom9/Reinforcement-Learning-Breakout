@@ -53,7 +53,7 @@ class renderer:
         bricks = state[4]
         self.draw(ball_position, paddle_position, bricks)
         self.savePNG()
-        # time.sleep(0.1)
+        # time.sleep(1)
 
     def savePNG(self):
         filename = '.tmp/' + str(self.imgCounter) + '.png'

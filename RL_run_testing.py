@@ -64,8 +64,14 @@ env2 = Breakout(max_timesteps=maxTimesteps, rendering=True, brick_layout=brick_l
 #create visulsation for the given starting direction of ball -2,-1,0,1,2
 startingDirections = [-2, -1, 0, 1, 2]
 
+startDict = {-2: "left2", 
+             -1: "left1",
+             0: "middle",
+             1: "right1",
+             2: "right2"}
+
 for direction in startingDirections:
     test_agent_certain_start(agent, env2, render=True, startingDirection=direction)
-    visualizer.saveGIF(f'{method}_{direction}')
+    visualizer.saveGIF(f'{method}_{num_bricks}_{brick_layout}_{startDict[direction]}')
 
 
