@@ -17,4 +17,4 @@ conda install -c conda-forge pygame
 conda install -c conda-forge seaborn
 ```
 
-We are using the external library [https://imagemagick.org/](ImageMagick) for gif creation.
+We are using the external library [ImageMagick](https://imagemagick.org/) for gif creation.
