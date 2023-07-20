@@ -90,7 +90,7 @@ class Breakout:
 
         if self.brick_layout == "ReversePyramid":
             margin = 0  # Margin from sides
-            for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 1):  # Adding bricks for each row
+            for k in range(0, self.num_bricks * 3 // self.grid_size[0] + 2):  # Adding bricks for each row
                 for i in range(3*margin, self.grid_size[0] - (3*margin), 3):  # Step size of 3 to make space for each brick
                     brick = []
                     for j in range(3):  # For each block of the brick
