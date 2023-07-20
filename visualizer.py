@@ -24,7 +24,7 @@ def saveGIF(name):
     files = " ".join(filelist)
 
     # Using external library ImageMagick for automatic gif creation
-    os.system(f'magick convert -size 600x400 -delay 5 -loop 1 {files} img/{name}.gif')
+    os.system(f'magick convert -size 600x400 -delay 5 -loop 0 {files} img/{name}.gif')
     # remove files
 
     for filename in os.listdir('.tmp'):   
